@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>지네 여인 : 유전자 오류의 밤</title>
+  <style>
+
+:root {
+  --bg: #070908;
+  --panel: rgba(18, 22, 20, 0.86);
+  --panel-2: rgba(25, 29, 27, 0.94);
+  --line: #b8f3d1;
+  --line-2: #d8b7ff;
+  --warn: #ff6b7a;
+  --safe: #b7f7c8;
+  --amber: #e8d7a2;
+  --text: #edf5ee;
+  --sub: #a9bab0;
+  --shadow: 0 0 18px rgba(184, 243, 209, 0.14);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  font-family: "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 18% 24%, rgba(216,183,255,0.12), transparent 26%),
+    radial-gradient(circle at 80% 16%, rgba(184,243,209,0.09), transparent 24%),
+    radial-gradient(circle at 55% 78%, rgba(255,107,122,0.08), transparent 23%),
+    linear-gradient(180deg, #060706 0%, #0a0d0b 48%, #050605 100%);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(120deg, rgba(184,243,209,0.035) 0 1px, transparent 1px 32px),
+    repeating-linear-gradient(60deg, rgba(216,183,255,0.025) 0 1px, transparent 1px 42px);
+  opacity: 0.45;
+}
+
+.app {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 68px 1fr 270px 42px;
+  position: relative;
+  z-index: 1;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 22px;
+  border-bottom: 1px solid rgba(184,243,209,0.28);
+  background:
+    linear-gradient(90deg, rgba(17, 22, 19, 0.92), rgba(12, 15, 14, 0.78)),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 18px);
+  backdrop-filter: blur(9px);
+  box-shadow: var(--shadow);
+  gap: 16px;
+}
+
+.title-wrap { min-width: 0; }
+
+.title {
+  margin: 0;
+  font-size: 1.06rem;
+  letter-spacing: 0.03em;
+  color: #f5efe2;
+  text-shadow: 0 0 10px rgba(216,183,255,0.28);
+}
+
+.title::before {
+  content: "GENE// ";
+  color: var(--line);
+  font-size: 0.8rem;
+}
+
+.subtitle {
+  margin-top: 3px;
+  font-size: 0.66rem;
+  color: var(--sub);
+}
+
+.hud {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.hud-item {
+  min-width: 96px;
+  padding: 6px 9px;
+  border: 1px solid rgba(184,243,209,0.22);
+  background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.018));
+  border-radius: 999px;
+  font-size: 0.7rem;
+  box-shadow: inset 0 0 12px rgba(184,243,209,0.04);
+}
+
+.hud-label {
+  color: var(--sub);
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 2px;
+}
+
+.hud-value { font-weight: 800; }
+.stability { color: var(--safe); }
+.trust { color: var(--line-2); }
+.risk { color: var(--amber); }
+
+.main {
+  position: relative;
+  padding: 14px 22px 10px;
+  min-height: 0;
+}
+
+.glitch {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+  background:
+    linear-gradient(90deg, rgba(216,183,255,0.08), transparent 36%, rgba(184,243,209,0.08) 67%, transparent),
+    repeating-linear-gradient(180deg, rgba(255,255,255,0.025) 0 2px, transparent 2px 7px);
+  mix-blend-mode: screen;
+}
+
+.stage {
+  height: 100%;
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  border: 1px solid rgba(184,243,209,0.30);
+  border-radius: 28px 8px 28px 8px;
+  background:
+    linear-gradient(180deg, rgba(18,22,20,0.80), rgba(10,13,12,0.92)),
+    radial-gradient(circle at 50% 50%, rgba(184,243,209,0.08), transparent 46%);
+  box-shadow:
+    0 0 0 1px rgba(216,183,255,0.10) inset,
+    0 16px 50px rgba(0,0,0,0.46),
+    var(--shadow);
+  display: grid;
+  grid-template-rows: 1fr;
+  overflow: hidden;
+}
+
+.asset-stage {
+  padding: 16px 20px;
+}
+
+.asset-frame {
+  height: 100%;
+  min-height: 0;
+  border: 1.5px dashed rgba(184,243,209,0.40);
+  border-radius: 24px 6px 24px 6px;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(184,243,209,0.10), transparent 30%),
+    radial-gradient(circle at 30% 70%, rgba(216,183,255,0.08), transparent 25%),
+    linear-gradient(180deg, rgba(184,243,209,0.035), rgba(255,107,122,0.025)),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.026) 0 1px, transparent 1px 34px),
+    repeating-linear-gradient(180deg, rgba(255,255,255,0.022) 0 1px, transparent 1px 34px);
+  box-shadow: inset 0 0 22px rgba(184,243,209,0.08), 0 0 22px rgba(216,183,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.asset-frame::before {
+  content: "DNA MAP // ERROR BLOOM";
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  color: rgba(184,243,209,0.70);
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+}
+
+.asset-frame::after {
+  content: "";
+  position: absolute;
+  right: 18px;
+  bottom: 14px;
+  width: 82px;
+  height: 82px;
+  border: 1px solid rgba(216,183,255,0.45);
+  border-radius: 50%;
+  background:
+    linear-gradient(90deg, transparent 49%, rgba(216,183,255,0.22) 50%, transparent 51%),
+    linear-gradient(0deg, transparent 49%, rgba(216,183,255,0.22) 50%, transparent 51%);
+  box-shadow: 0 0 18px rgba(216,183,255,0.16);
+  opacity: 0.8;
+}
+
+.asset-placeholder {
+  text-align: center;
+  padding: 14px;
+  max-width: 860px;
+}
+
+.asset-placeholder-title {
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: #f5efe2;
+  letter-spacing: 0.10em;
+  margin-bottom: 8px;
+}
+
+.asset-placeholder-sub {
+  color: var(--sub);
+  line-height: 1.55;
+  font-size: 0.82rem;
+}
+
+.asset-placeholder-tag {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(216,183,255,0.24);
+  background: rgba(255,255,255,0.035);
+  color: #f0e7ff;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+}
+
+.bottom-ui {
+  width: min(1120px, calc(100% - 44px));
+  margin: 0 auto 8px;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 0.85fr 1.35fr 0.9fr;
+  gap: 12px;
+}
+
+.info-panel,
+.story-panel,
+.choice-panel {
+  min-height: 0;
+  background: linear-gradient(180deg, rgba(25,29,27,0.90), rgba(13,16,15,0.88));
+  border: 1px solid rgba(184,243,209,0.24);
+  border-radius: 20px 6px 20px 6px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.scene-head {
+  padding: 14px 16px 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.scene-id {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(184,243,209,0.26);
+  color: var(--line);
+  font-size: 0.66rem;
+  margin-bottom: 7px;
+}
+
+.scene-title {
+  margin: 0;
+  font-size: 1.18rem;
+  line-height: 1.25;
+  color: #fff8ea;
+}
+
+.scene-phase {
+  margin-top: 6px;
+  color: var(--sub);
+  font-size: 0.76rem;
+}
+
+.scene-bg {
+  margin: 0;
+  padding: 10px 16px;
+  color: #c5d4cb;
+  font-size: 0.78rem;
+  line-height: 1.42;
+  background: rgba(255,255,255,0.018);
+  white-space: pre-line;
+}
+
+.story-panel {
+  display: grid;
+  grid-template-rows: auto 1fr 1fr;
+}
+
+.dialogue-box,
+.logic-box,
+.system-box {
+  background: rgba(25, 29, 27, 0.82);
+  border-bottom: 1px solid rgba(255,255,255,0.055);
+  padding: 9px 12px;
+  min-height: 0;
+}
+
+.system-box { border-bottom: 0; }
+
+.box-label {
+  font-size: 0.64rem;
+  color: var(--line-2);
+  margin-bottom: 5px;
+  letter-spacing: 0.08em;
+}
+
+.dialogue {
+  white-space: pre-line;
+  line-height: 1.42;
+  font-size: 0.8rem;
+}
+
+.logic-list,
+.system-list {
+  margin: 0;
+  padding-left: 16px;
+  color: var(--sub);
+  line-height: 1.38;
+  font-size: 0.72rem;
+}
+
+.choice-panel {
+  display: grid;
+  grid-template-rows: 42px 1fr;
+}
+
+.nav-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 9px 12px 0;
+}
+
+.nav-btn {
+  border: 1px solid rgba(184,243,209,0.26);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.035);
+  color: var(--text);
+  font-size: 0.72rem;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+
+.nav-btn.play {
+  border-color: rgba(216,183,255,0.38);
+  color: #f0e7ff;
+  box-shadow: 0 0 12px rgba(216,183,255,0.08);
+}
+
+.nav-btn:disabled {
+  opacity: 0.32;
+  cursor: not-allowed;
+}
+
+.nav-btn:not(:disabled):hover {
+  transform: translateY(-1px);
+  background: rgba(184,243,209,0.08);
+}
+
+.choices-wrap {
+  height: 100%;
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  justify-content: center;
+}
+
+.choice-btn,
+.restart-btn {
+  appearance: none;
+  border: 1px solid rgba(216,183,255,0.42);
+  border-radius: 16px 5px 16px 5px;
+  background: linear-gradient(180deg, rgba(216,183,255,0.09), rgba(184,243,209,0.035));
+  color: var(--text);
+  padding: 11px 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease, background 0.14s ease;
+  font-size: 0.8rem;
+  line-height: 1.42;
+  width: 100%;
+}
+
+.choice-btn:hover,
+.restart-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 20px rgba(216,183,255,0.14);
+  border-color: rgba(184,243,209,0.55);
+  background: linear-gradient(180deg, rgba(216,183,255,0.13), rgba(184,243,209,0.07));
+}
+
+.choice-note {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.67rem;
+  color: var(--sub);
+}
+
+.footer {
+  width: min(1120px, calc(100% - 44px));
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 12px;
+  border: 1px solid rgba(184,243,209,0.18);
+  border-radius: 14px 14px 0 0;
+  color: var(--sub);
+  background: rgba(8, 11, 10, 0.84);
+  gap: 16px;
+  font-size: 0.72rem;
+}
+
+.download-btn {
+  appearance: none;
+  border: 1px solid rgba(184,243,209,0.30);
+  background: transparent;
+  color: var(--line);
+  border-radius: 999px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 0.68rem;
+}
+
+.download-btn:hover {
+  background: rgba(184,243,209,0.08);
+}
+
+@media (max-width: 900px) {
+  html, body { overflow: auto; height: auto; }
+  .app { height: auto; grid-template-rows: auto 260px auto auto; }
+  .hud { flex-wrap: wrap; }
+  .bottom-ui { grid-template-columns: 1fr; }
+  .footer { margin-bottom: 0; }
+}
+
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="title-wrap">
+        <h1 class="title">지네 여인 : 유전자 오류의 밤</h1>
+        <div class="subtitle">BIOPUNK FAIRYTALE / INTERACTIVE SYSTEM DEMO</div>
+      </div>
+      <div class="hud">
+        <div class="hud-item">
+          <div class="hud-label">STABILITY</div>
+          <div class="hud-value stability" id="hud-stability">50</div>
+        </div>
+        <div class="hud-item">
+          <div class="hud-label">TRUST</div>
+          <div class="hud-value trust" id="hud-trust">50</div>
+        </div>
+        <div class="hud-item">
+          <div class="hud-label">RISK</div>
+          <div class="hud-value risk" id="hud-risk">0</div>
+        </div>
+        <div class="hud-item">
+          <div class="hud-label">LOOP</div>
+          <div class="hud-value" id="hud-loop">0</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="glitch" id="glitch-layer"></div>
+      <section class="stage">
+        <div class="asset-stage">
+          <div class="asset-frame">
+            <div class="asset-placeholder">
+              <div class="asset-placeholder-title">ASSET DISPLAY AREA</div>
+              <div class="asset-placeholder-sub">캐릭터 일러스트, 유전자 변이 컷, 실험실 배경, 감시 UI 에셋이 들어갈 중앙 스테이지입니다.<br>사이버펑크를 유지하되 바이오 실험실과 어두운 동화 분위기로 재해석했습니다.</div>
+              <div class="asset-placeholder-tag">BIOPUNK / GENE ERROR / DARK FAIRYTALE</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <section class="bottom-ui">
+      <div class="info-panel">
+        <div class="scene-head">
+          <div class="scene-id" id="scene-id">S1</div>
+          <h2 class="scene-title" id="scene-title">유전자 이상 신호</h2>
+          <div class="scene-phase" id="scene-phase">Phase 1. 발산 및 빌드업</div>
+        </div>
+        <p class="scene-bg" id="scene-background"></p>
+      </div>
+
+      <div class="story-panel">
+        <div class="dialogue-box">
+          <div class="box-label">DIALOGUE & NARRATION</div>
+          <div class="dialogue" id="scene-dialogue"></div>
+        </div>
+        <div class="logic-box">
+          <div class="box-label">CONDITION</div>
+          <ul class="logic-list" id="scene-logic"></ul>
+        </div>
+        <div class="system-box">
+          <div class="box-label">SYSTEM LOG</div>
+          <ul class="system-list" id="scene-system"></ul>
+        </div>
+      </div>
+
+      <div class="choice-panel">
+        <div class="nav-controls">
+          <button class="nav-btn" id="back-btn">← 이전</button>
+          <button class="nav-btn play" id="play-btn">PLAY →</button>
+        </div>
+        <div class="choices-wrap" id="choices"></div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="log-line" id="footer-log">SYSTEM READY // S1 대기 중</div>
+      <button class="download-btn" id="download-btn">HTML 저장</button>
+    </footer>
+  </div>
+
+  <script>
+    // 게임 상태 변수
+    const defaultState = () => ({
+      stability: 50,
+      trust: 50,
+      risk: 0,
+      loopCount: 0,
+      confession: false,
+      finalChoice: null,
+      currentScene: 'S1'
+    });
+
+    let state = defaultState();
+    let sceneHistory = [];
+
+    // 수치 보정 함수
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    // 장면 데이터
+    const scenes = {
+      S1: {
+        id: 'S1',
+        title: '유전자 이상 신호',
+        phase: 'Phase 1. 발산 및 빌드업',
+        background: '무균 스마트 아파트. 천장 센서가 푸르게 호흡하고, HUD에는 “Gene Stability Critical” 경고가 붉게 점멸한다.',
+        dialogue: '시스템: “유전자 안정 수치가 붕괴 중입니다. 미조치 시 비인가 생명체로 분류됩니다.”\n지나: “더 떨어지면… 인간 형태를 못 유지해.”',
+        getLogic: () => ['게임 시작 장면', '초기 상태값: STABILITY 50 / TRUST 50 / RISK 0'],
+        getSystem: () => ['생존 방식 첫 선택', '이 장면의 선택이 이후 추적 강도와 생존 안정성에 직접 영향'],
+        choices: [
+          {
+            text: '[A] 캡슐 강제 안정화',
+            note: 'STABILITY +40 / RISK +20',
+            action: () => {
+              state.stability = clamp(state.stability + 40, 0, 100);
+              state.risk = clamp(state.risk + 20, 0, 100);
+            },
+            next: 'S2'
+          },
+          {
+            text: '[B] 은폐 유지',
+            note: 'STABILITY -20 / RISK -5',
+            action: () => {
+              state.stability = clamp(state.stability - 20, 0, 100);
+              state.risk = clamp(state.risk - 5, 0, 100);
+            },
+            next: 'S2'
+          }
+        ]
+      },
+      S2: {
+        id: 'S2',
+        title: '감시 로그 발생',
+        phase: 'Phase 1. 발산 및 빌드업',
+        background: '천장형 감시 AI EYE-7이 기동한다. 붉은 스캔 라이트가 방 안을 훑고, 생체 데이터가 겹겹이 열려 지나의 몸을 읽어낸다.',
+        dialogue: 'EYE-7: “비인가 DNA 패턴 기록 중…”\n지나: “로그가 남으면 끝장이야.”',
+        getLogic: () => {
+          const logic = [];
+          logic.push(state.risk >= 20 ? 'IF RISK ≥ 20 → 집중 추적 모드 활성화' : 'RISK가 아직 낮아 즉시 집중 추적은 아님');
+          logic.push(state.stability < 40 ? 'IF STABILITY < 40 → 미세 변이 시각화 발생' : '현재 STABILITY는 즉시 붕괴 수준은 아님');
+          return logic;
+        },
+        getSystem: () => ['로그 삭제 여부가 이후 검열국 추적 난이도에 영향', '여기서 RISK를 낮추면 중반 압박 완화 가능'],
+        choices: [
+          {
+            text: '[A] 로그 삭제 해킹',
+            note: 'RISK -20 / STABILITY -5',
+            action: () => {
+              state.risk = clamp(state.risk - 20, 0, 100);
+              state.stability = clamp(state.stability - 5, 0, 100);
+            },
+            next: 'S3'
+          },
+          {
+            text: '[B] 로그 방치',
+            note: 'RISK +10',
+            action: () => {
+              state.risk = clamp(state.risk + 10, 0, 100);
+            },
+            next: 'S3'
+          }
+        ]
+      },
+      S3: {
+        id: 'S3',
+        title: '관계 균열',
+        phase: 'Phase 1. 발산 및 빌드업',
+        background: '거실의 따뜻한 조명과 지나의 불안정한 신체가 강하게 대비된다. 민재는 무언가 이상함을 분명히 감지한다.',
+        dialogue: '민재: “요즘 숨기는 거 있지? 네 표정이 너무 이상해.”\n지나: “……”',
+        getLogic: () => {
+          const logic = [];
+          logic.push(state.stability < 35 ? 'IF STABILITY < 35 → 변이 흔적 노출' : '겉으로는 인간 형태를 간신히 유지');
+          logic.push(state.trust < 40 ? 'IF TRUST < 40 → 민재의 의심 심화' : '아직 대화로 수습 가능한 관계 상태');
+          return logic;
+        },
+        getSystem: () => ['TRUST는 후반 감정 서사와 엔딩 판정의 핵심 변수', '정직한 선택일수록 관계는 좋아지지만 발각 위험이 오를 수 있음'],
+        choices: [
+          {
+            text: '[A] 진실 일부 공개',
+            note: 'TRUST +30 / RISK +25',
+            action: () => {
+              state.trust = clamp(state.trust + 30, 0, 100);
+              state.risk = clamp(state.risk + 25, 0, 100);
+            },
+            next: 'S4'
+          },
+          {
+            text: '[B] 거짓말',
+            note: 'TRUST -20 / RISK -5',
+            action: () => {
+              state.trust = clamp(state.trust - 20, 0, 100);
+              state.risk = clamp(state.risk - 5, 0, 100);
+            },
+            next: 'S4'
+          }
+        ]
+      },
+      S4: {
+        id: 'S4',
+        title: '변이 임계점',
+        phase: 'Phase 1. 발산 및 빌드업',
+        background: '욕실 거울 앞. 갈라진 피부 아래로 발광하는 패턴이 흐르고, 손끝은 이미 인간의 형태에서 벗어나기 시작한다.',
+        dialogue: '지나: “이 상태로는 오래 못 버텨… 더 늦기 전에 결정해야 해.”',
+        getLogic: () => {
+          const logic = [];
+          logic.push(state.stability < 30 ? 'IF STABILITY < 30 → 강제 변이 이벤트 발생' : '아직은 캡슐 또는 외부 도움으로 버틸 수 있음');
+          logic.push(state.risk >= 40 ? 'IF RISK ≥ 40 → 외부 추적 신호 감지' : '추적 신호는 약하지만 사라지지 않음');
+          return logic;
+        },
+        getSystem: () => ['생존 중심 선택과 관계 중심 선택이 갈리는 핵심 분기', '이후 검열국 추적 구간의 압박 강도가 결정됨'],
+        choices: [
+          {
+            text: '[A] 캡슐 이동',
+            note: 'STABILITY +30 / RISK +15',
+            action: () => {
+              state.stability = clamp(state.stability + 30, 0, 100);
+              state.risk = clamp(state.risk + 15, 0, 100);
+            },
+            next: 'S5'
+          },
+          {
+            text: '[B] 민재 도움 요청',
+            note: 'TRUST +20 / RISK +20',
+            action: () => {
+              state.trust = clamp(state.trust + 20, 0, 100);
+              state.risk = clamp(state.risk + 20, 0, 100);
+            },
+            next: 'S5'
+          }
+        ]
+      },
+      S5: {
+        id: 'S5',
+        title: '검열국 추적',
+        phase: 'Phase 2. 핵심 관문 수렴',
+        background: '외부 검열 드론이 푸른 탐색광을 쏘아내고 긴급 사이렌이 울린다. Dr. 케인의 회수 명령이 도시 네트워크 전체에 퍼진다.',
+        dialogue: 'Dr. 케인: “비인가 개체 확인. 제거 또는 회수 프로토콜을 실행한다.”\n지나: “도망쳐야 해. 지금 당장.”',
+        getLogic: () => {
+          const logic = [];
+          logic.push(state.risk >= 60 ? 'IF RISK ≥ 60 → 강제 추적 활성화' : '검열국 추적은 시작됐지만 포위 단계는 아님');
+          logic.push(state.trust < 40 ? 'IF TRUST < 40 → 민재와의 연계가 약해 지원 기대치 낮음' : '민재와의 관계가 유지되어 심리적 지지 가능');
+          return logic;
+        },
+        getSystem: () => ['[A]는 위험 수치를 크게 낮추는 은폐 루트', '[B]는 빠르지만 안정도 손실로 루프 발생 가능'],
+        choices: [
+          {
+            text: '[A] 위치 해킹 은폐',
+            note: 'RISK -25 / 바로 S6 진입',
+            action: () => {
+              state.risk = clamp(state.risk - 25, 0, 100);
+            },
+            next: 'S6'
+          },
+          {
+            text: '[B] 도주',
+            note: 'RISK -10 / STABILITY -15 / 실패 처리로 RE_S4 이동',
+            action: () => {
+              state.risk = clamp(state.risk - 10, 0, 100);
+              state.stability = clamp(state.stability - 15, 0, 100);
+            },
+            next: 'RE_S4'
+          }
+        ]
+      },
+      RE_S4: {
+        id: 'RE_S4',
+        title: '재은폐',
+        phase: 'Phase 2. 핵심 관문 수렴',
+        background: '급히 숨어든 은신처. 밖에서는 드론 소리가 맴돌고, 실내 공기는 정적처럼 무겁게 가라앉아 있다.',
+        dialogue: '시스템: “추적 회피 실패. 임시 재정비 모드 진입.”\n지나: “한 번 더 할 수 있어… 아니면 여기서 끝낼 수도 있어.”',
+        getLogic: () => ['S5 도주 루트 실패 후 진입하는 루프 구조', '포기 시 즉시 붕괴 엔딩으로 이동'],
+        getSystem: () => [`현재 LOOP_COUNT = ${state.loopCount}`, '루프는 재도전 기회를 주지만 긴장감을 누적시킴'],
+        choices: [
+          {
+            text: '[A] 재은폐 후 재도전',
+            note: 'LOOP_COUNT +1 / S4로 복귀',
+            action: () => {
+              state.loopCount += 1;
+            },
+            next: 'S4'
+          },
+          {
+            text: '[B] 포기',
+            note: '즉시 G_OVER',
+            action: () => {},
+            next: 'G_OVER'
+          }
+        ]
+      },
+      S6: {
+        id: 'S6',
+        title: '금기 붕괴',
+        phase: 'Phase 2. 핵심 관문 수렴',
+        background: '은폐해 두었던 캡슐 룸이 열리고, 민재가 내부를 목격한다. 변이 장비와 안정화 흔적이 모두 드러난 순간이다.',
+        dialogue: '민재: “……이게 진짜 너야?”\n지나: “이제 더는 숨길 수 없어.”',
+        getLogic: () => {
+          const logic = [];
+          logic.push(state.trust >= 60 ? 'IF TRUST ≥ 60 → 대화 가능 상태' : 'TRUST가 낮아 공포와 거리감이 크게 작동');
+          logic.push('이 선택은 최종 엔딩 방향성을 결정하는 감정적 분기점');
+          return logic;
+        },
+        getSystem: () => ['고백은 관계 회복에 유리하지만 상황을 더 크게 흔듦', '은폐는 단기 안정에 유리하지만 감정적 붕괴 가능성 상승'],
+        choices: [
+          {
+            text: '[A] 진실 고백',
+            note: 'TRUST +40 / CONFESSION = true',
+            action: () => {
+              state.trust = clamp(state.trust + 40, 0, 100);
+              state.confession = true;
+            },
+            next: 'S7'
+          },
+          {
+            text: '[B] 강제 은폐',
+            note: 'TRUST -30 / CONFESSION = false',
+            action: () => {
+              state.trust = clamp(state.trust - 30, 0, 100);
+              state.confession = false;
+            },
+            next: 'S7'
+          }
+        ]
+      },
+      S7: {
+        id: 'S7',
+        title: '최후의 선택',
+        phase: 'Phase 3. 관문 통과 및 엔딩',
+        background: '어두운 복도 끝에서 탈출 루트와 검열국 진입 경로가 갈라진다. 뒤에서는 경보가 울리고, 앞에서는 마지막 선택만이 남는다.',
+        dialogue: '지나: “이제 정말 끝을 골라야 해.”\n민재: “같이 가든, 네가 남든… 지금 결정해야 해.”',
+        getLogic: () => {
+          const logic = [];
+          logic.push(state.risk >= 70 ? 'IF RISK ≥ 70 → 강한 추적 압박 상태' : '아직 탈출 가능성은 남아 있음');
+          logic.push(state.trust >= 70 ? 'IF TRUST ≥ 70 → 함께 탈출 조건 유리' : '관계 수치가 낮아 희생 엔딩 가능성 상승');
+          return logic;
+        },
+        getSystem: () => ['최종 선택과 누적 수치를 함께 판정하여 엔딩 이동', 'END_A / END_B / G_OVER 중 하나로 이동'],
+        choices: [
+          {
+            text: '[A] 함께 탈출',
+            note: '조건 충족 시 END_A, 실패 시 END_B 또는 G_OVER',
+            action: () => {
+              state.finalChoice = 'escape';
+            },
+            next: () => {
+              if (state.stability <= 0 || state.risk >= 80) return 'G_OVER';
+              if (state.trust >= 70 && state.risk < 80) return 'END_A';
+              return 'END_B';
+            }
+          },
+          {
+            text: '[B] 홀로 희생',
+            note: '희생 엔딩 고정',
+            action: () => {
+              state.finalChoice = 'sacrifice';
+            },
+            next: () => 'END_B'
+          }
+        ]
+      },
+      END_A: {
+        id: 'END_A',
+        title: '해방 엔딩',
+        phase: 'Phase 3. 관문 통과 및 엔딩',
+        background: '도시 외곽의 경계 구역. 검열국의 신호가 닿지 않는 어둠 너머로 두 사람의 발걸음이 사라진다.',
+        dialogue: '지문: “민재와 지나는 모든 것을 버리고 탈출한다. 불완전한 몸과 불안한 미래 속에서도, 둘은 처음으로 스스로의 삶을 선택한다.”',
+        getLogic: () => ['발생 조건: TRUST ≥ 70 AND RISK < 80', '최종 선택: 함께 탈출'],
+        getSystem: () => ['엔딩 판정 완료', `최종 수치 → STABILITY ${state.stability} / TRUST ${state.trust} / RISK ${state.risk}`],
+        choices: []
+      },
+      END_B: {
+        id: 'END_B',
+        title: '희생 엔딩',
+        phase: 'Phase 3. 관문 통과 및 엔딩',
+        background: '붕괴 직전의 통제 구역. 지나가 검열국의 시선을 자신에게 집중시키고, 민재는 멀어지는 그림자만 바라본다.',
+        dialogue: '지문: “지나는 홀로 남아 민재를 지킨다. 사랑은 남지만, 그녀의 존재는 어둠 속으로 사라진다.”',
+        getLogic: () => ['발생 조건: TRUST 조건 미충족 또는 희생 선택', '최종 선택: 홀로 희생 또는 탈출 실패'],
+        getSystem: () => ['엔딩 판정 완료', `최종 수치 → STABILITY ${state.stability} / TRUST ${state.trust} / RISK ${state.risk}`],
+        choices: []
+      },
+      G_OVER: {
+        id: 'G_OVER',
+        title: '붕괴 엔딩',
+        phase: 'Phase 3. 관문 통과 및 엔딩',
+        background: '붉은 경고등이 완전히 뒤덮는다. 변이는 제어를 벗어나고, 지나의 신체 데이터는 시스템에서 삭제 대상으로 확정된다.',
+        dialogue: '지문: “유전자 붕괴 완료. 더 이상 인간으로 분류되지 않는다.”',
+        getLogic: () => ['발생 조건: STABILITY ≤ 0 또는 RISK ≥ 80 또는 루프 포기', '실패 루트 엔딩'],
+        getSystem: () => ['게임 오버 판정 완료', `최종 수치 → STABILITY ${state.stability} / TRUST ${state.trust} / RISK ${state.risk}`],
+        choices: []
+      }
+    };
+
+    // UI 요소
+    const el = {
+      stability: document.getElementById('hud-stability'),
+      trust: document.getElementById('hud-trust'),
+      risk: document.getElementById('hud-risk'),
+      loop: document.getElementById('hud-loop'),
+      sceneId: document.getElementById('scene-id'),
+      sceneTitle: document.getElementById('scene-title'),
+      scenePhase: document.getElementById('scene-phase'),
+      sceneBackground: document.getElementById('scene-background'),
+      sceneDialogue: document.getElementById('scene-dialogue'),
+      sceneLogic: document.getElementById('scene-logic'),
+      sceneSystem: document.getElementById('scene-system'),
+      choices: document.getElementById('choices'),
+      footerLog: document.getElementById('footer-log'),
+      glitch: document.getElementById('glitch-layer'),
+      downloadBtn: document.getElementById('download-btn'),
+      backBtn: document.getElementById('back-btn'),
+      playBtn: document.getElementById('play-btn')
+    };
+
+    // HUD 갱신
+    function updateHud() {
+      el.stability.textContent = state.stability;
+      el.trust.textContent = state.trust;
+      el.risk.textContent = state.risk;
+      el.loop.textContent = state.loopCount;
+    }
+
+    // 글리치 연출
+    function triggerGlitch() {
+      el.glitch.style.opacity = '1';
+      setTimeout(() => {
+        el.glitch.style.opacity = '0';
+      }, 140);
+    }
+
+    // 재시작 버튼 생성
+    function createRestartButton() {
+      const button = document.createElement('button');
+      button.className = 'restart-btn';
+      button.textContent = '처음부터 다시 시작';
+      button.addEventListener('click', () => {
+        state = defaultState();
+        sceneHistory = [];
+        renderScene('S1');
+        triggerGlitch();
+      });
+      return button;
+    }
+
+    // 리스트 렌더링
+    function renderList(target, items) {
+      target.innerHTML = '';
+      items.forEach((item) => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        target.appendChild(li);
+      });
+    }
+
+    // 장면 렌더링
+    function renderScene(sceneKey) {
+      state.currentScene = sceneKey;
+      const scene = scenes[sceneKey];
+
+      el.sceneId.textContent = scene.id;
+      el.sceneTitle.textContent = scene.title;
+      el.scenePhase.textContent = scene.phase;
+      el.sceneBackground.textContent = scene.background;
+      el.sceneDialogue.textContent = scene.dialogue;
+
+      renderList(el.sceneLogic, scene.getLogic());
+      renderList(el.sceneSystem, scene.getSystem());
+
+      el.choices.innerHTML = '';
+
+      if (scene.choices.length === 0) {
+        el.choices.appendChild(createRestartButton());
+      } else {
+        scene.choices.forEach((choice) => {
+          const btn = document.createElement('button');
+          btn.className = 'choice-btn';
+          btn.innerHTML = `${choice.text}<span class="choice-note">${choice.note}</span>`;
+          btn.addEventListener('click', () => {
+            choice.action();
+            state.stability = clamp(state.stability, 0, 100);
+            state.trust = clamp(state.trust, 0, 100);
+            state.risk = clamp(state.risk, 0, 100);
+            updateHud();
+
+            const nextScene = typeof choice.next === 'function' ? choice.next() : choice.next;
+            sceneHistory.push(scene.id);
+            el.footerLog.textContent = `SYSTEM LOG // ${scene.id} → ${nextScene}`;
+            renderScene(nextScene);
+            triggerGlitch();
+          });
+          el.choices.appendChild(btn);
+        });
+      }
+
+      updateHud();
+
+      if (el.backBtn) {
+        el.backBtn.disabled = sceneHistory.length === 0;
+      }
+      if (el.playBtn) {
+        el.playBtn.disabled = scene.choices.length === 0;
+      }
+
+      if (sceneKey === 'S1') {
+        el.footerLog.textContent = 'SYSTEM READY // 유전자 이상 신호 감지';
+      }
+    }
+
+    // 현재 HTML 저장
+    function downloadHtml() {
+      const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'jine_yeoin_gene_error_night.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    
+    // 이전 / PLAY 버튼
+    el.backBtn.addEventListener('click', () => {
+      if (sceneHistory.length === 0) return;
+      const previousScene = sceneHistory.pop();
+      el.footerLog.textContent = `SYSTEM LOG // BACK → ${previousScene}`;
+      renderScene(previousScene);
+      triggerGlitch();
+    });
+
+    el.playBtn.addEventListener('click', () => {
+      const scene = scenes[state.currentScene];
+      if (!scene || scene.choices.length === 0) return;
+
+      // PLAY는 첫 번째 선택지를 기본 진행으로 처리
+      const choice = scene.choices[0];
+      choice.action();
+
+      state.stability = clamp(state.stability, 0, 100);
+      state.trust = clamp(state.trust, 0, 100);
+      state.risk = clamp(state.risk, 0, 100);
+      updateHud();
+
+      const nextScene = typeof choice.next === 'function' ? choice.next() : choice.next;
+      sceneHistory.push(scene.id);
+      el.footerLog.textContent = `SYSTEM LOG // PLAY ${scene.id} → ${nextScene}`;
+      renderScene(nextScene);
+      triggerGlitch();
+    });
+
+    el.downloadBtn.addEventListener('click', downloadHtml);
+
+    // 초기 실행
+    renderScene('S1');
+  </script>
+</body>
+
+</html>
