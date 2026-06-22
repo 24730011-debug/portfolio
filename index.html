@@ -236,6 +236,39 @@ body::before {
   letter-spacing: 0.08em;
 }
 
+.scene-asset {
+  position: relative;
+  z-index: 2;
+  display: none;
+  max-width: 100%;
+  max-height: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 20px 6px 20px 6px;
+  filter: drop-shadow(0 0 18px rgba(184,243,209,0.12));
+}
+
+.scene-video {
+  background: #020302;
+}
+
+.scene-audio {
+  position: absolute;
+  z-index: 4;
+  left: 18px;
+  right: 18px;
+  bottom: 16px;
+  width: calc(100% - 36px);
+  display: none;
+  opacity: 0.92;
+}
+
+.asset-placeholder {
+  position: relative;
+  z-index: 2;
+}
+
 .bottom-ui {
   width: min(1120px, calc(100% - 44px));
   margin: 0 auto 8px;
@@ -440,6 +473,90 @@ body::before {
   background: rgba(184,243,209,0.08);
 }
 
+
+/* 첫 화면 표지: 게임 UI가 보이기 전에 전체 화면으로 먼저 표시 */
+.cover-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #030403;
+  overflow: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.cover-screen.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.cover-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+
+.cover-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(216,183,255,0.16), transparent 32%),
+    radial-gradient(circle at 50% 80%, rgba(184,243,209,0.10), transparent 28%),
+    linear-gradient(180deg, #080a09 0%, #030403 100%);
+}
+
+.cover-fallback-title {
+  margin: 0 0 12px;
+  font-size: clamp(2.2rem, 6vw, 5.6rem);
+  line-height: 1.12;
+  color: #fff7e8;
+  letter-spacing: -0.04em;
+  text-shadow: 0 0 24px rgba(216,183,255,0.28);
+}
+
+.cover-fallback-sub {
+  margin: 0;
+  color: rgba(237,245,238,0.78);
+  font-size: clamp(0.9rem, 2vw, 1.25rem);
+}
+
+.cover-start-btn {
+  position: absolute;
+  left: 50%;
+  bottom: 8vh;
+  transform: translateX(-50%);
+  z-index: 2;
+  min-width: 220px;
+  padding: 15px 28px;
+  border: 1px solid rgba(184,243,209,0.68);
+  border-radius: 999px;
+  background: rgba(4, 6, 5, 0.58);
+  color: #f7fff8;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 26px rgba(184,243,209,0.16);
+}
+
+.cover-start-btn:hover {
+  background: rgba(184,243,209,0.14);
+  transform: translateX(-50%) translateY(-2px);
+}
+
 @media (max-width: 900px) {
   html, body { overflow: auto; height: auto; }
   .app { height: auto; grid-template-rows: auto 260px auto auto; }
@@ -452,6 +569,16 @@ body::before {
 </head>
 
 <body>
+
+  <section class="cover-screen" id="cover-screen" aria-label="표지 화면">
+    <img class="cover-image" id="cover-image" alt="지네 여인 표지 이미지" />
+    <div class="cover-fallback" id="cover-fallback">
+      <h1 class="cover-fallback-title">지네 여인 : 유전자 오류의 밤</h1>
+      <p class="cover-fallback-sub">표지 이미지를 image/cover.png로 올리면 이 화면에 바로 표시됩니다.</p>
+    </div>
+    <button class="cover-start-btn" id="cover-start-btn">시스템 접속</button>
+  </section>
+
   <div class="app">
     <header class="topbar">
       <div class="title-wrap">
@@ -483,10 +610,14 @@ body::before {
       <section class="stage">
         <div class="asset-stage">
           <div class="asset-frame">
-            <div class="asset-placeholder">
+            <img class="scene-asset scene-image" id="scene-image" alt="현재 장면 이미지" />
+            <video class="scene-asset scene-video" id="scene-video" controls playsinline preload="metadata"></video>
+            <audio class="scene-audio" id="scene-audio" controls preload="metadata"></audio>
+
+            <div class="asset-placeholder" id="asset-placeholder">
               <div class="asset-placeholder-title">ASSET DISPLAY AREA</div>
-              <div class="asset-placeholder-sub">캐릭터 일러스트, 유전자 변이 컷, 실험실 배경, 감시 UI 에셋이 들어갈 중앙 스테이지입니다.<br>사이버펑크를 유지하되 바이오 실험실과 어두운 동화 분위기로 재해석했습니다.</div>
-              <div class="asset-placeholder-tag">BIOPUNK / GENE ERROR / DARK FAIRYTALE</div>
+              <div class="asset-placeholder-sub">GitHub 폴더 경로 기준으로 이미지, 영상, TTS를 자동 연결합니다.<br>예: image/S1.png, video/S1.mp4, tts/S1.mp3</div>
+              <div class="asset-placeholder-tag">RELATIVE PATH / GITHUB PAGES READY</div>
             </div>
           </div>
         </div>
@@ -547,6 +678,117 @@ body::before {
 
     let state = defaultState();
     let sceneHistory = [];
+
+    // GitHub Pages 기준 상대경로 설정
+    // index.html과 image, video, tts, characterimage 폴더가 같은 위치에 있어야 합니다.
+    const ASSET_ROOT = './';
+    const ASSET_FOLDERS = {
+      image: `${ASSET_ROOT}image/`,
+      video: `${ASSET_ROOT}video/`,
+      tts: `${ASSET_ROOT}tts/`,
+      characterimage: `${ASSET_ROOT}characterimage/`
+    };
+
+    // 파일명이 S1.png / s1.png / scene1.png처럼 조금 달라도 최대한 찾아보도록 후보를 여러 개 둠
+    const SCENE_ASSET_NAMES = {
+      S1: ['S1', 's1', 'scene1', 'Scene1', '1'],
+      S2: ['S2', 's2', 'scene2', 'Scene2', '2'],
+      S3: ['S3', 's3', 'scene3', 'Scene3', '3'],
+      S4: ['S4', 's4', 'scene4', 'Scene4', '4'],
+      S5: ['S5', 's5', 'scene5', 'Scene5', '5'],
+      RE_S4: ['RE_S4', 're_s4', 'RE-S4', 're-s4', 'res4'],
+      S6: ['S6', 's6', 'scene6', 'Scene6', '6'],
+      S7: ['S7', 's7', 'scene7', 'Scene7', '7'],
+      END_A: ['END_A', 'end_a', 'endA', 'endingA', 'ending_a'],
+      END_B: ['END_B', 'end_b', 'endB', 'endingB', 'ending_b'],
+      G_OVER: ['G_OVER', 'g_over', 'gameover', 'game_over', 'GOVER']
+    };
+
+    const COVER_ASSET_NAMES = ['cover', 'Cover', 'COVER', 'main', 'Main', 'MAIN', 'title', 'Title', 'TITLE', '표지'];
+
+    function buildAssetCandidates(sceneKey, folderKey, extensions) {
+      const names = SCENE_ASSET_NAMES[sceneKey] || [sceneKey];
+      return names.flatMap((name) => extensions.map((ext) => `${ASSET_FOLDERS[folderKey]}${name}.${ext}`));
+    }
+
+    function resetAssetElement(element) {
+      element.removeAttribute('src');
+      element.style.display = 'none';
+      element.onload = null;
+      element.onerror = null;
+      element.onloadedmetadata = null;
+      if (typeof element.load === 'function') {
+        try { element.load(); } catch (error) {}
+      }
+    }
+
+    function tryLoadImage(candidates, onSuccess, onFail) {
+      const image = el.sceneImage;
+      let index = 0;
+
+      function next() {
+        if (index >= candidates.length) {
+          if (onFail) onFail();
+          return;
+        }
+
+        const src = candidates[index++];
+        image.onload = () => onSuccess(src);
+        image.onerror = next;
+        image.src = src;
+      }
+
+      next();
+    }
+
+    function tryLoadMedia(element, candidates, onSuccess, onFail) {
+      let index = 0;
+
+      function next() {
+        if (index >= candidates.length) {
+          if (onFail) onFail();
+          return;
+        }
+
+        const src = candidates[index++];
+        element.onloadedmetadata = () => onSuccess(src);
+        element.onerror = next;
+        element.src = src;
+        element.load();
+      }
+
+      next();
+    }
+
+    function updateSceneAsset(sceneKey) {
+      resetAssetElement(el.sceneImage);
+      resetAssetElement(el.sceneVideo);
+      resetAssetElement(el.sceneAudio);
+      el.assetPlaceholder.style.display = 'block';
+
+      const imageCandidates = [
+        ...buildAssetCandidates(sceneKey, 'image', ['png', 'jpg', 'jpeg', 'webp', 'gif']),
+        ...buildAssetCandidates(sceneKey, 'characterimage', ['png', 'jpg', 'jpeg', 'webp', 'gif'])
+      ];
+      const videoCandidates = buildAssetCandidates(sceneKey, 'video', ['mp4', 'webm', 'mov']);
+      const audioCandidates = buildAssetCandidates(sceneKey, 'tts', ['mp3', 'wav', 'm4a', 'ogg']);
+
+      tryLoadImage(imageCandidates, () => {
+        el.sceneImage.style.display = 'block';
+        el.assetPlaceholder.style.display = 'none';
+      });
+
+      tryLoadMedia(el.sceneVideo, videoCandidates, () => {
+        el.sceneVideo.style.display = 'block';
+        el.sceneImage.style.display = 'none';
+        el.assetPlaceholder.style.display = 'none';
+      });
+
+      tryLoadMedia(el.sceneAudio, audioCandidates, () => {
+        el.sceneAudio.style.display = 'block';
+      });
+    }
+
 
     // 수치 보정 함수
     function clamp(value, min, max) {
@@ -861,6 +1103,14 @@ body::before {
       choices: document.getElementById('choices'),
       footerLog: document.getElementById('footer-log'),
       glitch: document.getElementById('glitch-layer'),
+      sceneImage: document.getElementById('scene-image'),
+      sceneVideo: document.getElementById('scene-video'),
+      sceneAudio: document.getElementById('scene-audio'),
+      assetPlaceholder: document.getElementById('asset-placeholder'),
+      coverScreen: document.getElementById('cover-screen'),
+      coverImage: document.getElementById('cover-image'),
+      coverFallback: document.getElementById('cover-fallback'),
+      coverStartBtn: document.getElementById('cover-start-btn'),
       downloadBtn: document.getElementById('download-btn'),
       backBtn: document.getElementById('back-btn'),
       playBtn: document.getElementById('play-btn')
@@ -882,6 +1132,44 @@ body::before {
       }, 140);
     }
 
+    // 표지 이미지는 게임 UI 안에 넣지 않고, S1 전에 전체 화면으로 먼저 띄움
+    function loadCoverImage() {
+      const candidates = COVER_ASSET_NAMES.flatMap((name) =>
+        ['png', 'jpg', 'jpeg', 'webp', 'gif'].map((ext) => `${ASSET_FOLDERS.image}${name}.${ext}`)
+      );
+      let index = 0;
+
+      function next() {
+        if (index >= candidates.length) {
+          el.coverImage.style.display = 'none';
+          el.coverFallback.style.display = 'flex';
+          return;
+        }
+
+        const src = candidates[index++];
+        el.coverImage.onload = () => {
+          el.coverImage.style.display = 'block';
+          el.coverFallback.style.display = 'none';
+        };
+        el.coverImage.onerror = next;
+        el.coverImage.src = src;
+      }
+
+      next();
+    }
+
+    function showCover() {
+      el.coverScreen.classList.remove('is-hidden');
+    }
+
+    function startFromCover() {
+      el.coverScreen.classList.add('is-hidden');
+      state = defaultState();
+      sceneHistory = [];
+      renderScene('S1');
+      triggerGlitch();
+    }
+
     // 재시작 버튼 생성
     function createRestartButton() {
       const button = document.createElement('button');
@@ -891,7 +1179,7 @@ body::before {
         state = defaultState();
         sceneHistory = [];
         renderScene('S1');
-        triggerGlitch();
+        showCover();
       });
       return button;
     }
@@ -916,6 +1204,7 @@ body::before {
       el.scenePhase.textContent = scene.phase;
       el.sceneBackground.textContent = scene.background;
       el.sceneDialogue.textContent = scene.dialogue;
+      updateSceneAsset(sceneKey);
 
       renderList(el.sceneLogic, scene.getLogic());
       renderList(el.sceneSystem, scene.getSystem());
@@ -1004,9 +1293,12 @@ body::before {
     });
 
     el.downloadBtn.addEventListener('click', downloadHtml);
+    el.coverStartBtn.addEventListener('click', startFromCover);
 
-    // 초기 실행
+    // 초기 실행: 표지 전체 화면 → 시스템 접속 → S1
+    loadCoverImage();
     renderScene('S1');
+    showCover();
   </script>
 </body>
 
