@@ -227,10 +227,6 @@
       margin-bottom: 26px;
     }
 
-    button {
-      font-family: inherit;
-    }
-
     .control-btn {
       flex: 1;
       padding: 14px 18px;
@@ -312,19 +308,6 @@
       line-height: 1.6;
     }
 
-    .save-btn {
-      position: fixed;
-      right: 26px;
-      bottom: 24px;
-      padding: 12px 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(151, 255, 199, 0.45);
-      color: #baffd9;
-      background: rgba(0, 0, 0, 0.6);
-      font-weight: bold;
-      cursor: pointer;
-    }
-
     @media (max-width: 980px) {
       .top-bar {
         flex-direction: column;
@@ -383,12 +366,21 @@
     <section class="asset-area">
       <div class="asset-label" id="assetLabel">DNA MAP // COVER</div>
 
-      <video class="asset-video" id="assetVideo" controls playsinline muted preload="metadata" poster="./image/cover.png">
+      <video
+        class="asset-video"
+        id="assetVideo"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"
+        poster="./image/cover.png"
+      >
         <source id="assetSource" src="./video/cover.mp4" type="video/mp4">
         브라우저가 영상을 지원하지 않습니다.
       </video>
 
-      <p class="video-hint">영상이 자동으로 안 나오면 PLAY 버튼 또는 영상 재생 버튼을 눌러주세요.</p>
+      <p class="video-hint">영상은 자동으로 재생되며, 장면을 선택하면 해당 영상으로 변경됩니다.</p>
     </section>
 
     <section class="content-grid">
@@ -413,7 +405,7 @@
         <div class="info-block">
           <div class="info-title">CONDITION</div>
           <div class="info-text" id="conditionText">
-• 게임 시작 장면
+• 오프닝 표지 장면
 • 초기 상태값: STABILITY 50 / TRUST 50 / RISK 0
           </div>
         </div>
@@ -421,8 +413,8 @@
         <div class="info-block">
           <div class="info-title">SYSTEM LOG</div>
           <div class="info-text" id="systemText">
-• COVER 영상 로드 완료
-• PLAY 버튼을 누르면 다음 장면으로 이동
+• COVER 영상 자동 재생
+• 선택지를 누르면 다음 장면으로 이동
           </div>
         </div>
       </div>
@@ -430,7 +422,7 @@
       <div class="panel control-panel">
         <div class="main-controls">
           <button class="control-btn" onclick="prevScene()">← 이전</button>
-          <button class="control-btn" onclick="playScene()">PLAY →</button>
+          <button class="control-btn" onclick="nextScene()">다음 →</button>
         </div>
 
         <div id="choiceBox">
@@ -458,11 +450,9 @@
     </section>
 
     <div class="system-log" id="bottomLog">
-      SYSTEM READY // 표지 영상 로드 완료
+      SYSTEM READY // COVER 자동 재생 준비 완료
     </div>
   </main>
-
-  <button class="save-btn" onclick="alert('GitHub에서는 Commit changes를 눌러 저장하세요.')">HTML 저장</button>
 
   <script>
     let stats = {
@@ -483,7 +473,7 @@
         desc: "붉은 유전자 오류가 시작되고, 시스템은 지나의 존재를 감지한다.",
         dialogue: "시스템: “유전자 안정 수치가 불안정합니다.”\n지나: “내 몸에 무슨 일이 일어나고 있는 거지?”",
         condition: "• 오프닝 표지 장면\n• 초기 상태값: STABILITY 50 / TRUST 50 / RISK 0",
-        system: "• COVER 영상 로드 완료\n• PLAY 버튼을 누르면 다음 장면으로 이동",
+        system: "• COVER 영상 자동 재생\n• 선택지를 누르면 다음 장면으로 이동",
         choices: [
           { text: "[START] 시스템 접속", effect: "스토리를 시작합니다", action: "next" }
         ]
@@ -690,6 +680,25 @@
       return scenes.findIndex(scene => scene.key === key);
     }
 
+    function forcePlayVideo() {
+      assetVideo.muted = true;
+      assetVideo.autoplay = true;
+      assetVideo.loop = true;
+      assetVideo.playsInline = true;
+
+      const playPromise = assetVideo.play();
+
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            bottomLog.textContent = "SYSTEM LOG // 영상 자동 재생 중";
+          })
+          .catch(() => {
+            bottomLog.textContent = "SYSTEM LOG // 브라우저가 자동 재생을 막았습니다. 화면을 한 번 클릭하면 재생됩니다.";
+          });
+      }
+    }
+
     function loadScene(index) {
       if (index < 0 || index >= scenes.length) return;
 
@@ -705,9 +714,15 @@
       conditionText.textContent = scene.condition;
       systemText.textContent = scene.system;
 
+      assetVideo.pause();
       assetSource.src = scene.video;
       assetVideo.poster = scene.poster;
+      assetVideo.currentTime = 0;
       assetVideo.load();
+
+      assetVideo.onloadeddata = function () {
+        forcePlayVideo();
+      };
 
       choiceBox.innerHTML = "";
       scene.choices.forEach(choice => {
@@ -720,13 +735,14 @@
 
       bottomLog.textContent = "SYSTEM LOG // " + scene.badge + " 로드 완료";
       updateStats();
+
+      setTimeout(forcePlayVideo, 500);
     }
 
     function loadSceneByKey(key) {
       const index = getSceneIndexByKey(key);
       if (index !== -1) {
         loadScene(index);
-        playScene();
       }
     }
 
@@ -747,16 +763,9 @@
       }
     }
 
-    function playScene() {
-      assetVideo.play().catch(() => {
-        bottomLog.textContent = "SYSTEM LOG // 영상 자동 재생이 차단되었습니다. 영상의 재생 버튼을 눌러주세요.";
-      });
-    }
-
     function nextScene() {
       if (currentIndex < 7) {
         loadScene(currentIndex + 1);
-        playScene();
       } else {
         bottomLog.textContent = "SYSTEM LOG // 마지막 장면입니다. 엔딩을 선택하세요.";
       }
@@ -765,11 +774,19 @@
     function prevScene() {
       if (currentIndex > 0) {
         loadScene(currentIndex - 1);
-        playScene();
       }
     }
 
-    loadScene(0);
+    document.body.addEventListener("click", function () {
+      forcePlayVideo();
+    });
+
+    window.addEventListener("load", function () {
+      loadScene(0);
+      setTimeout(forcePlayVideo, 700);
+    });
+
+    updateStats();
   </script>
 </body>
 </html>
