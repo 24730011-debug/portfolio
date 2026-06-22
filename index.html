@@ -129,13 +129,6 @@
       border: 1px solid rgba(255, 62, 62, 0.23);
     }
 
-    .video-hint {
-      margin: 12px 0 0;
-      text-align: center;
-      color: #9fb0a7;
-      font-size: 13px;
-    }
-
     .content-grid {
       display: grid;
       grid-template-columns: 1fr 1.6fr 1.05fr;
@@ -297,17 +290,6 @@
       background: rgba(151, 255, 199, 0.14);
     }
 
-    .system-log {
-      margin-top: 12px;
-      padding: 16px 18px;
-      border: 1px solid rgba(151, 255, 199, 0.22);
-      border-radius: 14px;
-      color: #b9c7be;
-      background: rgba(0, 0, 0, 0.35);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
     @media (max-width: 980px) {
       .top-bar {
         flex-direction: column;
@@ -377,10 +359,7 @@
         poster="./image/cover.png"
       >
         <source id="assetSource" src="./video/cover.mp4" type="video/mp4">
-        브라우저가 영상을 지원하지 않습니다.
       </video>
-
-      <p class="video-hint">영상은 자동으로 재생되며, 장면을 선택하면 해당 영상으로 변경됩니다.</p>
     </section>
 
     <section class="content-grid">
@@ -448,10 +427,6 @@
       <button onclick="loadSceneByKey('end_b')">END_B</button>
       <button onclick="loadSceneByKey('g_over')">G_OVER</button>
     </section>
-
-    <div class="system-log" id="bottomLog">
-      SYSTEM READY // COVER 자동 재생 준비 완료
-    </div>
   </main>
 
   <script>
@@ -667,7 +642,6 @@
     const conditionText = document.getElementById("conditionText");
     const systemText = document.getElementById("systemText");
     const choiceBox = document.getElementById("choiceBox");
-    const bottomLog = document.getElementById("bottomLog");
 
     function updateStats() {
       document.getElementById("stabilityValue").textContent = stats.stability;
@@ -685,18 +659,7 @@
       assetVideo.autoplay = true;
       assetVideo.loop = true;
       assetVideo.playsInline = true;
-
-      const playPromise = assetVideo.play();
-
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            bottomLog.textContent = "SYSTEM LOG // 영상 자동 재생 중";
-          })
-          .catch(() => {
-            bottomLog.textContent = "SYSTEM LOG // 브라우저가 자동 재생을 막았습니다. 화면을 한 번 클릭하면 재생됩니다.";
-          });
-      }
+      assetVideo.play().catch(() => {});
     }
 
     function loadScene(index) {
@@ -733,10 +696,8 @@
         choiceBox.appendChild(btn);
       });
 
-      bottomLog.textContent = "SYSTEM LOG // " + scene.badge + " 로드 완료";
       updateStats();
-
-      setTimeout(forcePlayVideo, 500);
+      setTimeout(forcePlayVideo, 300);
     }
 
     function loadSceneByKey(key) {
@@ -766,8 +727,6 @@
     function nextScene() {
       if (currentIndex < 7) {
         loadScene(currentIndex + 1);
-      } else {
-        bottomLog.textContent = "SYSTEM LOG // 마지막 장면입니다. 엔딩을 선택하세요.";
       }
     }
 
@@ -783,7 +742,7 @@
 
     window.addEventListener("load", function () {
       loadScene(0);
-      setTimeout(forcePlayVideo, 700);
+      setTimeout(forcePlayVideo, 500);
     });
 
     updateStats();
