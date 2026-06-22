@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gene Collapse</title>
+  <title>GENE // 지네 여인 : 유전자 오류의 밤</title>
 
   <style>
     * {
@@ -12,344 +12,764 @@
 
     body {
       margin: 0;
-      background: #050505;
-      color: white;
+      background:
+        radial-gradient(circle at top, rgba(82, 42, 120, 0.18), transparent 35%),
+        linear-gradient(135deg, #030605, #0b1210 45%, #050505);
+      color: #e8f3ec;
       font-family: Arial, sans-serif;
       overflow-x: hidden;
     }
 
-    .cover-page {
-      min-height: 100vh;
-      background: #050505;
+    .top-bar {
+      width: 100%;
+      min-height: 84px;
+      padding: 20px 34px;
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(151, 255, 199, 0.25);
+      background: rgba(3, 8, 7, 0.88);
+      backdrop-filter: blur(10px);
+    }
+
+    .title-box h1 {
+      margin: 0;
+      font-size: 23px;
+      letter-spacing: -0.5px;
+      color: #f3fff8;
+    }
+
+    .title-box span {
+      color: #a6ffd2;
+    }
+
+    .title-box p {
+      margin: 9px 0 0;
+      font-size: 13px;
+      color: #aab8b0;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+
+    .stats {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .stat {
+      min-width: 120px;
+      padding: 10px 18px;
+      border: 1px solid rgba(151, 255, 199, 0.25);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .stat .label {
+      display: block;
+      font-size: 12px;
+      color: #aab8b0;
+      letter-spacing: 1px;
+    }
+
+    .stat .value {
+      display: block;
+      margin-top: 4px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #d8ffe8;
+    }
+
+    .stat.risk .value {
+      color: #ffd77a;
+    }
+
+    .wrap {
+      width: min(92vw, 1500px);
+      margin: 22px auto 40px;
+    }
+
+    .asset-area {
+      position: relative;
+      width: 100%;
+      min-height: 480px;
+      padding: 22px;
+      border: 1px solid rgba(151, 255, 199, 0.25);
+      border-radius: 28px;
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        rgba(9, 17, 14, 0.82);
+      background-size: 48px 48px;
+      box-shadow: 0 0 40px rgba(117, 255, 181, 0.09);
+      overflow: hidden;
+    }
+
+    .asset-label {
+      position: absolute;
+      top: 22px;
+      left: 28px;
+      z-index: 2;
+      color: #9fd8b9;
+      font-size: 13px;
+      letter-spacing: 2px;
+      font-weight: bold;
+    }
+
+    .asset-video {
+      width: 100%;
+      height: 430px;
+      margin-top: 26px;
+      border-radius: 20px;
+      background: #000;
+      object-fit: contain;
+      display: block;
+      box-shadow: 0 0 38px rgba(255, 0, 0, 0.28);
+      border: 1px solid rgba(255, 62, 62, 0.23);
+    }
+
+    .video-hint {
+      margin: 12px 0 0;
+      text-align: center;
+      color: #9fb0a7;
+      font-size: 13px;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr 1.05fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .panel {
+      min-height: 310px;
+      border: 1px solid rgba(151, 255, 199, 0.22);
+      border-radius: 18px;
+      background: rgba(9, 17, 14, 0.83);
+      overflow: hidden;
+    }
+
+    .scene-card {
+      padding: 22px;
+    }
+
+    .scene-badge {
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 30px;
-      text-align: center;
-    }
-
-    .cover-page img {
-      width: 100%;
-      max-width: 1100px;
-      border-radius: 18px;
-      box-shadow: 0 0 40px rgba(255, 0, 0, 0.35);
-    }
-
-    .start-btn {
-      margin-top: 28px;
-      padding: 15px 38px;
-      border: none;
+      min-width: 36px;
+      height: 28px;
+      padding: 0 10px;
+      border: 1px solid rgba(166, 255, 210, 0.35);
       border-radius: 999px;
-      background: #d71920;
-      color: white;
-      font-size: 20px;
+      color: #baffd9;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .scene-card h2 {
+      margin: 20px 0 8px;
+      font-size: 26px;
+      color: #ffffff;
+    }
+
+    .scene-card .phase {
+      color: #b9c7be;
+      font-size: 15px;
+      margin-bottom: 24px;
+    }
+
+    .scene-card .desc {
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      color: #d6e4dc;
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    .info-panel {
+      padding: 0;
+    }
+
+    .info-block {
+      padding: 20px 22px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .info-block:last-child {
+      border-bottom: none;
+    }
+
+    .info-title {
+      color: #c7a8ff;
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .info-text {
+      color: #e2ebe6;
+      line-height: 1.7;
+      font-size: 15px;
+      white-space: pre-line;
+    }
+
+    .control-panel {
+      padding: 22px;
+    }
+
+    .main-controls {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 26px;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    .control-btn {
+      flex: 1;
+      padding: 14px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(199, 168, 255, 0.45);
+      background: rgba(255, 255, 255, 0.03);
+      color: #eae6ff;
+      font-size: 16px;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 0 24px rgba(255, 0, 0, 0.55);
     }
 
-    .start-btn:hover {
-      background: #ff3030;
+    .control-btn:hover {
+      background: rgba(199, 168, 255, 0.15);
     }
 
-    .player-page {
-      display: none;
-      min-height: 100vh;
-      padding: 30px 20px 110px;
-      background: radial-gradient(circle at center, #1b0707 0%, #050505 60%);
-      text-align: center;
-    }
-
-    .scene-title {
-      color: #ff3333;
-      font-size: 28px;
-      letter-spacing: 3px;
-      margin: 10px 0 22px;
-    }
-
-    video {
+    .choice {
       width: 100%;
-      max-width: 1100px;
+      text-align: left;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(199, 168, 255, 0.55);
+      background: rgba(255, 255, 255, 0.04);
+      color: #f7f4ff;
+      cursor: pointer;
+    }
+
+    .choice strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 7px;
+    }
+
+    .choice span {
+      color: #b7c2bb;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .choice:hover {
+      background: rgba(199, 168, 255, 0.16);
+    }
+
+    .quick-nav {
+      margin-top: 14px;
+      padding: 16px;
+      border: 1px solid rgba(151, 255, 199, 0.18);
       border-radius: 18px;
-      background: black;
-      box-shadow: 0 0 40px rgba(255, 0, 0, 0.35);
-    }
-
-    .caption {
-      max-width: 850px;
-      margin: 22px auto;
-      color: #ddd;
-      font-size: 18px;
-      line-height: 1.7;
-    }
-
-    .controls {
-      margin-top: 24px;
+      background: rgba(0, 0, 0, 0.28);
       display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .controls button {
-      padding: 12px 22px;
-      border-radius: 999px;
-      border: 1px solid #ff3333;
-      background: rgba(0, 0, 0, 0.65);
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .controls button:hover {
-      background: #ff3333;
-    }
-
-    .ending-buttons {
-      display: none;
-      margin-top: 26px;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .ending-buttons button {
-      padding: 14px 24px;
-      border-radius: 999px;
-      border: none;
-      background: #8b0000;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .ending-buttons button:hover {
-      background: #d71920;
-    }
-
-    .scene-nav {
-      position: fixed;
-      bottom: 18px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: none;
       gap: 8px;
       flex-wrap: wrap;
       justify-content: center;
-      max-width: 95%;
-      padding: 12px;
-      border-radius: 999px;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(10px);
-      z-index: 100;
     }
 
-    .scene-nav button {
-      border: 1px solid #ff3333;
-      background: #111;
-      color: white;
+    .quick-nav button {
+      padding: 9px 12px;
       border-radius: 999px;
-      padding: 8px 13px;
+      border: 1px solid rgba(151, 255, 199, 0.3);
+      background: rgba(0, 0, 0, 0.4);
+      color: #dfffee;
       cursor: pointer;
       font-size: 13px;
     }
 
-    .scene-nav button:hover {
-      background: #ff3333;
+    .quick-nav button:hover {
+      background: rgba(151, 255, 199, 0.14);
+    }
+
+    .system-log {
+      margin-top: 12px;
+      padding: 16px 18px;
+      border: 1px solid rgba(151, 255, 199, 0.22);
+      border-radius: 14px;
+      color: #b9c7be;
+      background: rgba(0, 0, 0, 0.35);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .save-btn {
+      position: fixed;
+      right: 26px;
+      bottom: 24px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(151, 255, 199, 0.45);
+      color: #baffd9;
+      background: rgba(0, 0, 0, 0.6);
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    @media (max-width: 980px) {
+      .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .stats {
+        justify-content: flex-start;
+      }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .asset-area {
+        min-height: auto;
+      }
+
+      .asset-video {
+        height: auto;
+        max-height: 420px;
+      }
     }
   </style>
 </head>
 
 <body>
-
-  <!-- 표지 화면 -->
-  <section class="cover-page" id="coverPage">
-    <img src="./image/cover.png" alt="cover image">
-    <button class="start-btn" onclick="startStory()">시스템 접속</button>
-  </section>
-
-  <!-- 영상 재생 화면 -->
-  <section class="player-page" id="playerPage">
-    <h1 class="scene-title" id="sceneTitle">COVER</h1>
-
-    <video id="sceneVideo" controls playsinline muted preload="metadata" poster="./image/cover.png">
-      <source id="videoSource" src="./video/cover.mp4" type="video/mp4">
-      브라우저가 영상을 지원하지 않습니다.
-    </video>
-
-    <p class="caption" id="sceneCaption">
-      붉은 유전자 오류가 시작되고, 시스템은 지나를 위험 개체로 분류한다.
-    </p>
-
-    <div class="controls">
-      <button onclick="prevScene()">이전</button>
-      <button onclick="nextScene()">다음</button>
-      <button onclick="replayScene()">다시 보기</button>
+  <header class="top-bar">
+    <div class="title-box">
+      <h1><span>GENE//</span> 지네 여인 : 유전자 오류의 밤</h1>
+      <p>BIOPUNK FAIRYTALE / INTERACTIVE SYSTEM DEMO</p>
     </div>
 
-    <div class="ending-buttons" id="endingButtons">
-      <button onclick="goToSpecialScene('end_a')">END_A</button>
-      <button onclick="goToSpecialScene('end_b')">END_B</button>
-      <button onclick="goToSpecialScene('g_over')">G_OVER</button>
-      <button onclick="goToSpecialScene('re_s4')">RE_S4</button>
+    <div class="stats">
+      <div class="stat">
+        <span class="label">STABILITY</span>
+        <span class="value" id="stabilityValue">50</span>
+      </div>
+      <div class="stat">
+        <span class="label">TRUST</span>
+        <span class="value" id="trustValue">50</span>
+      </div>
+      <div class="stat risk">
+        <span class="label">RISK</span>
+        <span class="value" id="riskValue">0</span>
+      </div>
+      <div class="stat">
+        <span class="label">LOOP</span>
+        <span class="value" id="loopValue">0</span>
+      </div>
     </div>
-  </section>
+  </header>
 
-  <!-- 하단 장면 이동 버튼 -->
-  <nav class="scene-nav" id="sceneNav">
-    <button onclick="goToScene(0)">COVER</button>
-    <button onclick="goToScene(1)">S1</button>
-    <button onclick="goToScene(2)">S2</button>
-    <button onclick="goToScene(3)">S3</button>
-    <button onclick="goToScene(4)">S4</button>
-    <button onclick="goToScene(5)">S5</button>
-    <button onclick="goToScene(6)">S6</button>
-    <button onclick="goToScene(7)">S7</button>
-    <button onclick="goToSpecialScene('end_a')">END_A</button>
-    <button onclick="goToSpecialScene('end_b')">END_B</button>
-    <button onclick="goToSpecialScene('g_over')">G_OVER</button>
-    <button onclick="goToSpecialScene('re_s4')">RE_S4</button>
-  </nav>
+  <main class="wrap">
+    <section class="asset-area">
+      <div class="asset-label" id="assetLabel">DNA MAP // COVER</div>
+
+      <video class="asset-video" id="assetVideo" controls playsinline muted preload="metadata" poster="./image/cover.png">
+        <source id="assetSource" src="./video/cover.mp4" type="video/mp4">
+        브라우저가 영상을 지원하지 않습니다.
+      </video>
+
+      <p class="video-hint">영상이 자동으로 안 나오면 PLAY 버튼 또는 영상 재생 버튼을 눌러주세요.</p>
+    </section>
+
+    <section class="content-grid">
+      <div class="panel scene-card">
+        <div class="scene-badge" id="sceneBadge">COVER</div>
+        <h2 id="sceneTitle">시스템 접속</h2>
+        <div class="phase" id="scenePhase">Opening Cover</div>
+        <div class="desc" id="sceneDesc">
+          붉은 유전자 오류가 시작되고, 시스템은 지나의 존재를 감지한다.
+        </div>
+      </div>
+
+      <div class="panel info-panel">
+        <div class="info-block">
+          <div class="info-title">DIALOGUE & NARRATION</div>
+          <div class="info-text" id="dialogueText">
+시스템: “유전자 안정 수치가 불안정합니다.”
+지나: “내 몸에 무슨 일이 일어나고 있는 거지?”
+          </div>
+        </div>
+
+        <div class="info-block">
+          <div class="info-title">CONDITION</div>
+          <div class="info-text" id="conditionText">
+• 게임 시작 장면
+• 초기 상태값: STABILITY 50 / TRUST 50 / RISK 0
+          </div>
+        </div>
+
+        <div class="info-block">
+          <div class="info-title">SYSTEM LOG</div>
+          <div class="info-text" id="systemText">
+• COVER 영상 로드 완료
+• PLAY 버튼을 누르면 다음 장면으로 이동
+          </div>
+        </div>
+      </div>
+
+      <div class="panel control-panel">
+        <div class="main-controls">
+          <button class="control-btn" onclick="prevScene()">← 이전</button>
+          <button class="control-btn" onclick="playScene()">PLAY →</button>
+        </div>
+
+        <div id="choiceBox">
+          <button class="choice" onclick="nextScene()">
+            <strong>[START] 시스템 접속</strong>
+            <span>스토리를 시작합니다</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="quick-nav">
+      <button onclick="loadSceneByKey('cover')">COVER</button>
+      <button onclick="loadSceneByKey('s1')">S1</button>
+      <button onclick="loadSceneByKey('s2')">S2</button>
+      <button onclick="loadSceneByKey('s3')">S3</button>
+      <button onclick="loadSceneByKey('s4')">S4</button>
+      <button onclick="loadSceneByKey('s5')">S5</button>
+      <button onclick="loadSceneByKey('s6')">S6</button>
+      <button onclick="loadSceneByKey('s7')">S7</button>
+      <button onclick="loadSceneByKey('re_s4')">RE_S4</button>
+      <button onclick="loadSceneByKey('end_a')">END_A</button>
+      <button onclick="loadSceneByKey('end_b')">END_B</button>
+      <button onclick="loadSceneByKey('g_over')">G_OVER</button>
+    </section>
+
+    <div class="system-log" id="bottomLog">
+      SYSTEM READY // 표지 영상 로드 완료
+    </div>
+  </main>
+
+  <button class="save-btn" onclick="alert('GitHub에서는 Commit changes를 눌러 저장하세요.')">HTML 저장</button>
 
   <script>
+    let stats = {
+      stability: 50,
+      trust: 50,
+      risk: 0,
+      loop: 0
+    };
+
     const scenes = [
       {
-        title: "COVER",
+        key: "cover",
+        badge: "COVER",
+        title: "시스템 접속",
+        phase: "Opening Cover",
         video: "./video/cover.mp4",
         poster: "./image/cover.png",
-        caption: "붉은 유전자 오류가 시작되고, 시스템은 지나를 위험 개체로 분류한다."
+        desc: "붉은 유전자 오류가 시작되고, 시스템은 지나의 존재를 감지한다.",
+        dialogue: "시스템: “유전자 안정 수치가 불안정합니다.”\n지나: “내 몸에 무슨 일이 일어나고 있는 거지?”",
+        condition: "• 오프닝 표지 장면\n• 초기 상태값: STABILITY 50 / TRUST 50 / RISK 0",
+        system: "• COVER 영상 로드 완료\n• PLAY 버튼을 누르면 다음 장면으로 이동",
+        choices: [
+          { text: "[START] 시스템 접속", effect: "스토리를 시작합니다", action: "next" }
+        ]
       },
       {
-        title: "S1",
+        key: "s1",
+        badge: "S1",
+        title: "유전자 이상 신호",
+        phase: "Phase 1. 발산 및 빌드업",
         video: "./video/s1.mp4",
         poster: "./image/s1.png",
-        caption: "지나는 자신의 몸에 나타난 유전자 균열을 발견하고 불안에 휩싸인다."
+        desc: "무균 스마트 아파트, 천장 센서가 푸르게 호흡하고 HUD에는 Gene Stability Critical 경고가 붉게 점멸한다.",
+        dialogue: "시스템: “유전자 안정 수치가 붕괴 중입니다. 미조치 시 비인간 생명체로 분류됩니다.”\n지나: “더 떨어지면… 인간 형태를 못 유지해.”",
+        condition: "• 게임 시작 장면\n• 초기 상태값: STABILITY 50 / TRUST 50 / RISK 0",
+        system: "• 생존 방식 첫 선택\n• 이 장면의 선택이 이후 추적 강도와 안정성에 영향을 줌",
+        choices: [
+          { text: "[A] 캡슐 강제 안정화", effect: "STABILITY +40 / RISK +20", stat: { stability: 40, risk: 20 }, action: "next" },
+          { text: "[B] 은폐 유지", effect: "STABILITY -20 / RISK -5", stat: { stability: -20, risk: -5 }, action: "next" }
+        ]
       },
       {
-        title: "S2",
+        key: "s2",
+        badge: "S2",
+        title: "감시 드론 스캔",
+        phase: "Phase 2. 추적 개시",
         video: "./video/s2.mp4",
         poster: "./image/s2.png",
-        caption: "감시 드론은 지나를 스캔하고, 시스템은 그녀를 추적 대상으로 인식한다."
+        desc: "도시의 드론이 붉은 스캔 빔으로 지나를 탐지하고, 시스템은 그녀를 추적 대상으로 확정한다.",
+        dialogue: "시스템: “대상 식별 완료. JINA. 유전자 일치율 99.8%.”\n지나: “도망쳐야 해. 지금 바로.”",
+        condition: "• 감시 시스템 활성화\n• RISK가 높을수록 추적 강도가 상승",
+        system: "• EYE-7 SCAN 작동\n• 도시 감시망에 대상 정보 등록",
+        choices: [
+          { text: "[A] 스캔 신호 교란", effect: "TRUST +10 / RISK +10", stat: { trust: 10, risk: 10 }, action: "next" },
+          { text: "[B] 움직이지 않고 숨기", effect: "STABILITY -10 / RISK -10", stat: { stability: -10, risk: -10 }, action: "next" }
+        ]
       },
       {
-        title: "S3",
+        key: "s3",
+        badge: "S3",
+        title: "도시 격리 명령",
+        phase: "Phase 3. 고립 심화",
         video: "./video/s3.mp4",
         poster: "./image/s3.png",
-        caption: "도시는 지나를 위험한 존재로 감시하기 시작하고, 그녀의 고립은 깊어진다."
+        desc: "도시 전체에 격리 명령이 내려지고, 지나는 사람들의 시선과 시스템의 경고 속에서 점점 고립된다.",
+        dialogue: "방송: “유전자 오류 보유자는 즉시 신고 대상입니다.”\n지나: “나는 괴물이 아니야. 아직은…”",
+        condition: "• 사회적 격리 시작\n• TRUST 수치가 이후 엔딩 분기에 영향",
+        system: "• 격리 명령 송출\n• 시민 신고 네트워크 활성화",
+        choices: [
+          { text: "[A] 누군가에게 도움 요청", effect: "TRUST +25 / RISK +15", stat: { trust: 25, risk: 15 }, action: "next" },
+          { text: "[B] 혼자 이동", effect: "TRUST -10 / RISK -10", stat: { trust: -10, risk: -10 }, action: "next" }
+        ]
       },
       {
-        title: "S4",
+        key: "s4",
+        badge: "S4",
+        title: "유전자 붕괴 가속",
+        phase: "Phase 4. 변이 확산",
         video: "./video/s4.mp4",
         poster: "./image/s4.png",
-        caption: "유전자 붕괴가 가속화되며, 지나는 자신의 정체성이 무너지는 순간을 마주한다."
+        desc: "붉은 유전자 패턴이 몸 전체로 번지고, 지나는 자신의 정체성이 무너지는 순간을 마주한다.",
+        dialogue: "시스템: “생체 구조 불안정. 인간 분류 기준 미달.”\n지나: “기록이 나를 지우고 있어.”",
+        condition: "• STABILITY가 낮으면 G_OVER 가능성 증가\n• LOOP 선택 가능",
+        system: "• Gene Collapse 진행률 상승\n• 기억 데이터 손상 감지",
+        choices: [
+          { text: "[A] 기억 데이터를 붙잡는다", effect: "TRUST +15 / STABILITY -15", stat: { trust: 15, stability: -15 }, action: "next" },
+          { text: "[B] 시스템을 역추적한다", effect: "RISK +20 / LOOP +1", stat: { risk: 20, loop: 1 }, action: "re_s4" }
+        ]
       },
       {
-        title: "S5",
+        key: "s5",
+        badge: "S5",
+        title: "삭제 대상 지정",
+        phase: "Phase 5. 클라이맥스",
         video: "./video/s5.mp4",
         poster: "./image/s5.png",
-        caption: "시스템의 경고는 더욱 강해지고, 지나의 존재는 삭제 대상으로 향한다."
+        desc: "시스템은 지나를 삭제 대상으로 지정하고, 도시는 그녀의 생체 기록을 하나씩 차단하기 시작한다.",
+        dialogue: "시스템: “SUBJECT CLASSIFICATION: NON-HUMAN.”\n지나: “내가 사라져도… 내가 있었다는 건 남겨줘.”",
+        condition: "• 삭제 프로토콜 시작\n• RISK가 높을 경우 강제 종료 루트 가능",
+        system: "• 생체 기록 차단\n• 신원 데이터 접근 제한",
+        choices: [
+          { text: "[A] 기록을 외부로 전송", effect: "TRUST +20 / RISK +20", stat: { trust: 20, risk: 20 }, action: "next" },
+          { text: "[B] 스스로 시스템에 접속", effect: "STABILITY -20 / LOOP +1", stat: { stability: -20, loop: 1 }, action: "next" }
+        ]
       },
       {
-        title: "S6",
+        key: "s6",
+        badge: "S6",
+        title: "데이터 코어 진입",
+        phase: "Phase 6. 존재 확인",
         video: "./video/s6.mp4",
         poster: "./image/s6.png",
-        caption: "지나는 끝없는 데이터 속에서 자신의 존재가 희미해지는 것을 느낀다."
+        desc: "지나는 유전자 데이터 코어에 도달하고, 자신의 기록과 기억이 분리되는 장면을 목격한다.",
+        dialogue: "지나: “내 몸이 아니라… 내 기록이 나를 죽이고 있었어.”\n시스템: “삭제 승인 대기 중.”",
+        condition: "• 마지막 선택 직전\n• TRUST와 STABILITY에 따라 엔딩 변화",
+        system: "• 데이터 코어 접속\n• 기억 아카이브 분리",
+        choices: [
+          { text: "[A] 인간 기록을 복구한다", effect: "TRUST +15 / STABILITY +10", stat: { trust: 15, stability: 10 }, action: "next" },
+          { text: "[B] 오류 기록을 받아들인다", effect: "STABILITY -10 / LOOP +1", stat: { stability: -10, loop: 1 }, action: "next" }
+        ]
       },
       {
-        title: "S7",
+        key: "s7",
+        badge: "S7",
+        title: "마지막 선택",
+        phase: "Phase 7. 엔딩 분기",
         video: "./video/s7.mp4",
         poster: "./image/s7.png",
-        caption: "마지막 선택의 순간, 지나의 운명은 완전한 삭제와 생존의 갈림길에 선다."
+        desc: "지나는 삭제와 생존의 경계에 선다. 시스템은 마지막 선택을 요구한다.",
+        dialogue: "시스템: “최종 명령을 선택하십시오.”\n지나: “나는 오류가 아니라… 살아 있는 존재야.”",
+        condition: "• END_A / END_B / G_OVER 선택 가능\n• 수치에 따라 직접 분기 선택",
+        system: "• 최종 엔딩 분기 활성화\n• 하단 선택지에서 엔딩 선택",
+        choices: [
+          { text: "[END_A] 삭제 수용", effect: "조용한 소멸 엔딩", action: "end_a" },
+          { text: "[END_B] 생존 가능성", effect: "희미한 희망 엔딩", action: "end_b" },
+          { text: "[G_OVER] 붕괴 완료", effect: "게임오버 / 기록 삭제", action: "g_over" }
+        ]
+      },
+      {
+        key: "re_s4",
+        badge: "RE_S4",
+        title: "붕괴 이전으로 회귀",
+        phase: "Return Scene",
+        video: "./video/re_s4.mp4",
+        poster: "./image/RE_s4.png",
+        desc: "지나는 붕괴 직전의 선택지로 되돌아가고, 이전 선택의 흔적만이 시스템 로그에 남는다.",
+        dialogue: "시스템: “루프가 감지되었습니다.”\n지나: “이번엔 다른 선택을 해야 해.”",
+        condition: "• LOOP 수치 증가\n• S4 이후 루트로 복귀 가능",
+        system: "• Return Event 발생\n• 이전 선택 기록 일부 보존",
+        choices: [
+          { text: "[RETURN] S5로 진행", effect: "루프 이후 계속 진행", action: "s5" },
+          { text: "[RESET] S1로 돌아가기", effect: "처음부터 다시 선택", action: "s1" }
+        ]
+      },
+      {
+        key: "end_a",
+        badge: "END_A",
+        title: "조용한 삭제",
+        phase: "Ending A",
+        video: "./video/end_a.mp4",
+        poster: "./image/end_a.png",
+        desc: "지나는 시스템의 삭제를 받아들이고, 붉은 데이터 입자 속으로 조용히 사라진다.",
+        dialogue: "지나: “그래도 나는 존재했어.”\n시스템: “BIOLOGICAL RECORD: DELETED.”",
+        condition: "• 비극적 엔딩\n• 존재 기록 삭제",
+        system: "• END_A 도달\n• 신원 데이터 제거 완료",
+        choices: [
+          { text: "[REPLAY] 처음으로", effect: "COVER로 돌아가기", action: "cover" }
+        ]
+      },
+      {
+        key: "end_b",
+        badge: "END_B",
+        title: "희미한 생존",
+        phase: "Ending B",
+        video: "./video/end_b.mp4",
+        poster: "./image/end_b.png",
+        desc: "지나는 완전히 사라지지 않고, 붕괴된 시스템 너머에 희미한 생존 가능성을 남긴다.",
+        dialogue: "지나: “아직 끝난 게 아니야.”\n시스템: “UNKNOWN SIGNAL DETECTED.”",
+        condition: "• 희망 엔딩\n• 생존 신호 잔존",
+        system: "• END_B 도달\n• 미확인 생체 신호 감지",
+        choices: [
+          { text: "[REPLAY] 처음으로", effect: "COVER로 돌아가기", action: "cover" }
+        ]
+      },
+      {
+        key: "g_over",
+        badge: "G_OVER",
+        title: "유전자 붕괴 완료",
+        phase: "Game Over",
+        video: "./video/g_over.mp4",
+        poster: "./image/g_over.png",
+        desc: "유전자 시스템은 지나의 모든 기록을 삭제하고, 그녀의 존재는 데이터 속에서 붕괴된다.",
+        dialogue: "시스템: “GENE COLLAPSE COMPLETE.”\n시스템: “MEMORY ARCHIVE: ERASED.”",
+        condition: "• 게임오버\n• 신원 / 기억 / 생체 기록 삭제",
+        system: "• G_OVER 도달\n• 모든 데이터 삭제 처리",
+        choices: [
+          { text: "[RETRY] 다시 시작", effect: "S1부터 재시작", action: "s1" }
+        ]
       }
     ];
 
-    const specialScenes = {
-      end_a: {
-        title: "END_A",
-        video: "./video/end_a.mp4",
-        poster: "./image/end_a.png",
-        caption: "지나는 시스템의 삭제를 받아들이고, 조용히 데이터 속으로 사라진다."
-      },
-      end_b: {
-        title: "END_B",
-        video: "./video/end_b.mp4",
-        poster: "./image/end_b.png",
-        caption: "지나는 완전히 사라지지 않고, 희미한 생존의 가능성을 남긴다."
-      },
-      g_over: {
-        title: "G_OVER",
-        video: "./video/g_over.mp4",
-        poster: "./image/g_over.png",
-        caption: "유전자 시스템은 지나의 존재 기록을 삭제하고, 모든 신원 데이터가 붕괴된다."
-      },
-      re_s4: {
-        title: "RE_S4",
-        video: "./video/re_s4.mp4",
-        poster: "./image/RE_s4.png",
-        caption: "붕괴 이후, 지나는 다시 선택의 순간으로 되돌아간다."
-      }
-    };
-
     let currentIndex = 0;
 
-    const coverPage = document.getElementById("coverPage");
-    const playerPage = document.getElementById("playerPage");
-    const sceneNav = document.getElementById("sceneNav");
+    const assetLabel = document.getElementById("assetLabel");
+    const assetVideo = document.getElementById("assetVideo");
+    const assetSource = document.getElementById("assetSource");
+    const sceneBadge = document.getElementById("sceneBadge");
     const sceneTitle = document.getElementById("sceneTitle");
-    const sceneVideo = document.getElementById("sceneVideo");
-    const videoSource = document.getElementById("videoSource");
-    const sceneCaption = document.getElementById("sceneCaption");
-    const endingButtons = document.getElementById("endingButtons");
+    const scenePhase = document.getElementById("scenePhase");
+    const sceneDesc = document.getElementById("sceneDesc");
+    const dialogueText = document.getElementById("dialogueText");
+    const conditionText = document.getElementById("conditionText");
+    const systemText = document.getElementById("systemText");
+    const choiceBox = document.getElementById("choiceBox");
+    const bottomLog = document.getElementById("bottomLog");
 
-    function startStory() {
-      coverPage.style.display = "none";
-      playerPage.style.display = "block";
-      sceneNav.style.display = "flex";
-      goToScene(0);
+    function updateStats() {
+      document.getElementById("stabilityValue").textContent = stats.stability;
+      document.getElementById("trustValue").textContent = stats.trust;
+      document.getElementById("riskValue").textContent = stats.risk;
+      document.getElementById("loopValue").textContent = stats.loop;
     }
 
-    function loadScene(scene) {
-      sceneTitle.textContent = scene.title;
-      videoSource.src = scene.video;
-      sceneVideo.poster = scene.poster;
-      sceneCaption.textContent = scene.caption;
-      sceneVideo.load();
-      sceneVideo.play().catch(() => {});
+    function getSceneIndexByKey(key) {
+      return scenes.findIndex(scene => scene.key === key);
     }
 
-    function goToScene(index) {
+    function loadScene(index) {
+      if (index < 0 || index >= scenes.length) return;
+
       currentIndex = index;
-      endingButtons.style.display = index === scenes.length - 1 ? "flex" : "none";
-      loadScene(scenes[currentIndex]);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      const scene = scenes[currentIndex];
+
+      assetLabel.textContent = "DNA MAP // " + scene.badge;
+      sceneBadge.textContent = scene.badge;
+      sceneTitle.textContent = scene.title;
+      scenePhase.textContent = scene.phase;
+      sceneDesc.textContent = scene.desc;
+      dialogueText.textContent = scene.dialogue;
+      conditionText.textContent = scene.condition;
+      systemText.textContent = scene.system;
+
+      assetSource.src = scene.video;
+      assetVideo.poster = scene.poster;
+      assetVideo.load();
+
+      choiceBox.innerHTML = "";
+      scene.choices.forEach(choice => {
+        const btn = document.createElement("button");
+        btn.className = "choice";
+        btn.innerHTML = `<strong>${choice.text}</strong><span>${choice.effect}</span>`;
+        btn.onclick = () => handleChoice(choice);
+        choiceBox.appendChild(btn);
+      });
+
+      bottomLog.textContent = "SYSTEM LOG // " + scene.badge + " 로드 완료";
+      updateStats();
+    }
+
+    function loadSceneByKey(key) {
+      const index = getSceneIndexByKey(key);
+      if (index !== -1) {
+        loadScene(index);
+        playScene();
+      }
+    }
+
+    function handleChoice(choice) {
+      if (choice.stat) {
+        stats.stability += choice.stat.stability || 0;
+        stats.trust += choice.stat.trust || 0;
+        stats.risk += choice.stat.risk || 0;
+        stats.loop += choice.stat.loop || 0;
+      }
+
+      updateStats();
+
+      if (choice.action === "next") {
+        nextScene();
+      } else {
+        loadSceneByKey(choice.action);
+      }
+    }
+
+    function playScene() {
+      assetVideo.play().catch(() => {
+        bottomLog.textContent = "SYSTEM LOG // 영상 자동 재생이 차단되었습니다. 영상의 재생 버튼을 눌러주세요.";
+      });
     }
 
     function nextScene() {
-      if (currentIndex < scenes.length - 1) {
-        goToScene(currentIndex + 1);
+      if (currentIndex < 7) {
+        loadScene(currentIndex + 1);
+        playScene();
       } else {
-        endingButtons.style.display = "flex";
+        bottomLog.textContent = "SYSTEM LOG // 마지막 장면입니다. 엔딩을 선택하세요.";
       }
     }
 
     function prevScene() {
       if (currentIndex > 0) {
-        goToScene(currentIndex - 1);
+        loadScene(currentIndex - 1);
+        playScene();
       }
     }
 
-    function replayScene() {
-      sceneVideo.currentTime = 0;
-      sceneVideo.play().catch(() => {});
-    }
-
-    function goToSpecialScene(key) {
-      endingButtons.style.display = "none";
-      loadScene(specialScenes[key]);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    loadScene(0);
   </script>
-
 </body>
 </html>
